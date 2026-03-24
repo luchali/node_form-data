@@ -95,9 +95,21 @@ function createServer() {
 
           fs.writeFileSync(filePath, JSON.stringify(bodyParsed, null, 2));
           res.statusCode = 200;
-          res.setHeader('Content-Type', 'application/json');
 
-          res.end(JSON.stringify(bodyParsed));
+          if (req.url === '/add-expense') {
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify(bodyParsed));
+          } else {
+            res.setHeader('Content-Type', 'text/html');
+
+            res.end(`
+              <html>
+                <body>
+                  <pre>${JSON.stringify(bodyParsed, null, 2)}</pre>
+                </body>
+              </html>
+            `);
+          }
         } catch (err) {
           res.statusCode = 500;
           res.end('Server error: ' + err.message);
